@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ascukins-printify-task": {
+    "import-orders": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ascukins-printify-task",
+            "outputPath": "dist/import-orders",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -67,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ascukins-printify-task:build"
+            "browserTarget": "import-orders:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ascukins-printify-task:build:production"
+              "browserTarget": "import-orders:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ascukins-printify-task:build"
+            "browserTarget": "import-orders:build"
           }
         },
         "test": {
@@ -93,6 +94,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -115,15 +117,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ascukins-printify-task:serve"
+            "devServerTarget": "import-orders:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ascukins-printify-task:serve:production"
+              "devServerTarget": "import-orders:serve:production"
             }
           }
         }
       }
-    }},
-  "defaultProject": "ascukins-printify-task"
+    }
+  },
+  "defaultProject": "import-orders"
 }
