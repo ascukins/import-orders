@@ -2,7 +2,9 @@
   <mat-toolbar>
     <span> Orders </span>
     <span class="spacer"> </span>
-    <button mat-raised-button color="primary">Import orders</button>
+    <button mat-raised-button color="primary" (click)="openImportDialog()">
+      Import orders
+    </button>
     <button mat-raised-button>NA1</button>
     <button mat-raised-button>NA2</button>
   </mat-toolbar>

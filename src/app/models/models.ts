@@ -1,42 +1,37 @@
 
-export type FulfillmentStage = 'In production' | 'Quality Control';
+export type FulfillmentStage = 'In production' | 'Quality Control' | 'Incoming' | 'Imported';
 export type currency = number;
 export interface Order {
   id: string;
   customer: string;
   created: Date;
-
   revenue: currency;
   cost: currency;
   price: currency;
-
   fulfillmentStage?: FulfillmentStage;
-  //  orderVolume: currency;
 
-  contents?: OrderContent[];
+  orderVolume?: currency;
+  amountOfProducts?: number;
+  SKU?: string;
 
+  orderedItems?: OrderedItem[];
 }
 
-// export interface ExternalOrder{
-
-
-
-// }
-
-
-export interface OrderContent {
+export interface OrderedItem {
   productId: string;
-  amountOfProducts: number;
-
+  name: string;
+  sku: string;
+  amount: number;
+  price: currency;
+  options: string[];
+  selected?: boolean;
 }
 
 export interface Product {
   id: string;
   name: string;
   sku: string;
+  amount: number;
+  retailPrice: currency;
+  availableOptions: string[];
 }
-
-
-/*
-3) Is order Id in external orders unique compared to main order table?
-*/

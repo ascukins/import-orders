@@ -1,0 +1,94 @@
+<div>
+  <mat-form-field class="w100" appearance="outline">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      (keyup)="applyFilter($event.target.value)"
+      placeholder="Filter"
+    />
+  </mat-form-field>
+
+  <table class="w100" mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "id") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "customer") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "created") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="revenue">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Revenue $</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "revenue") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cost">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost $</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "cost") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Price $</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "price") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fulfillmentStage">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fulfillment</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "fulfillmentStage") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="amountOfProducts">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Amount Of Products
+      </th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "amountOfProducts") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="orderVolume">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Volume</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "orderVolume") }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SKU">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>SKU</th>
+      <td mat-cell *matCellDef="let order">
+        {{ getOrderCellValue(order, "SKU") }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedOrderColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedOrderColumns"
+      (click)="onRowClick(row)"
+      class="clickable"
+    ></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5]"></mat-paginator>
+</div>

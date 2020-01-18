@@ -1,0 +1,51 @@
+<mat-toolbar>
+  <span> Import Order </span>
+</mat-toolbar>
+
+<mat-horizontal-stepper [@.disabled]="true" [linear]="true">
+  <mat-step [completed]="order">
+    <ng-template matStepLabel>Find Order</ng-template>
+    <div class="step-content">
+      <app-orders-table
+        [orders]="store.externalOrders"
+        (rowClick)="onOrderRowClick($event)"
+      >
+      </app-orders-table>
+    </div>
+    <div class="button-bar">
+      <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+    </div>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Prepare Products</ng-template>
+    <div class="step-content">
+      <div *ngIf="order" class="breadcrumb">
+        <span class="link" (click)="stepper.reset()">My Orders</span> | Order
+        {{ order?.id }}
+      </div>
+      <app-ordered-items-table
+        *ngIf="order?.orderedItems"
+        [orderedItems]="order.orderedItems"
+      ></app-ordered-items-table>
+    </div>
+    <div class="button-bar">
+      <button mat-raised-button matStepperPrevious>Previous</button>
+      <button mat-raised-button matStepperNext>Next</button>
+      <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+    </div>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Confirm Order</ng-template>
+    <div class="step-content">
+      <pre>{{ order | json }}</pre>
+    </div>
+    <div class="button-bar">
+      <button mat-raised-button matStepperPrevious>Previous</button>
+      <button mat-raised-button [mat-dialog-close]="order">
+        Confirm and Ship
+      </button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
