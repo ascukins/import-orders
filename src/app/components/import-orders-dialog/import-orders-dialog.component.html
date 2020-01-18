@@ -24,10 +24,10 @@
         <span class="link" (click)="stepper.reset()">My Orders</span> | Order
         {{ order?.id }}
       </div>
-      <app-ordered-items-table
-        *ngIf="order?.orderedItems"
-        [orderedItems]="order.orderedItems"
-      ></app-ordered-items-table>
+      <app-order-items-table
+        *ngIf="order?.orderItems"
+        [orderItems]="order.orderItems"
+      ></app-order-items-table>
     </div>
     <div class="button-bar">
       <button mat-raised-button matStepperPrevious>Previous</button>

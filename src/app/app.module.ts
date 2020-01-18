@@ -18,7 +18,7 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { OrderStoreService } from './store/order-store.service';
 import { ImportOrdersDialogComponent } from './components/import-orders-dialog/import-orders-dialog.component';
 import { OrdersTableComponent } from './components/orders-table/orders-table.component';
-import { OrderedItemsTableComponent } from './components/ordered-items-table/ordered-items-table.component';
+import { OrderItemsTableComponent } from './components/order-items-table/order-items-table.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { OrderedItemsTableComponent } from './components/ordered-items-table/ord
     OrdersComponent,
     ImportOrdersDialogComponent,
     OrdersTableComponent,
-    OrderedItemsTableComponent
+    OrderItemsTableComponent
   ],
   entryComponents: [
     ImportOrdersDialogComponent

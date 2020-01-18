@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Order, OrderedItem } from '../models/models';
+import { Order, OrderItem } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class OrderStoreService {
   constructor() {
     // TODO remove
     // console.log('store init');
-    const items: OrderedItem[] = [
+    const items: OrderItem[] = [
       {
         productId: '1',
         name: 'Christmas Dog Socks',
@@ -68,7 +68,7 @@ export class OrderStoreService {
         amountOfProducts: 2,
         orderVolume: 54.43,
         SKU: 'SOCK_101_BIG_1',
-        orderedItems: items
+        orderItems: items
       },
       {
         id: '#1235',
@@ -81,7 +81,7 @@ export class OrderStoreService {
         amountOfProducts: 3,
         orderVolume: 64.43,
         SKU: 'SOCK_101_BIG_2',
-        orderedItems: items
+        orderItems: items
       },
       {
         id: '#1135',
@@ -94,7 +94,7 @@ export class OrderStoreService {
         amountOfProducts: 40,
         orderVolume: 19.99,
         SKU: 'SPOON_123_BIG_1',
-        orderedItems: items
+        orderItems: items
       },
       {
         id: '#1136',
@@ -107,7 +107,7 @@ export class OrderStoreService {
         amountOfProducts: 8,
         orderVolume: 1504.11,
         SKU: 'ITEM_99_HZ_5',
-        orderedItems: items
+        orderItems: items
       },
       {
         id: '#1352',
@@ -120,7 +120,7 @@ export class OrderStoreService {
         amountOfProducts: 23,
         orderVolume: 614.43,
         SKU: 'SOCK_101_BIG_2',
-        orderedItems: items
+        orderItems: items
       },
       {
         id: '#135',
@@ -133,7 +133,7 @@ export class OrderStoreService {
         amountOfProducts: 4,
         orderVolume: 196.99,
         SKU: 'SPOON_123_BIG_1',
-        orderedItems: items
+        orderItems: items
       },
     ];
 

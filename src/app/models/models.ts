@@ -14,10 +14,10 @@ export interface Order {
   amountOfProducts?: number;
   SKU?: string;
 
-  orderedItems?: OrderedItem[];
+  orderItems?: OrderItem[];
 }
 
-export interface OrderedItem {
+export interface OrderItem {
   productId: string;
   name: string;
   sku: string;
