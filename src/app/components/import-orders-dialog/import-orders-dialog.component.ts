@@ -10,8 +10,8 @@ import { Order } from 'src/app/models/models';
   styleUrls: ['./import-orders-dialog.component.scss']
 })
 export class ImportOrdersDialogComponent {
-
   @ViewChild(MatStepper, { static: true }) stepper: MatStepper;
+  displayedOrderColumns: string[] = ['id', 'customer', 'amountOfProducts', 'orderVolume', 'SKU'];
   order: Order;
 
   constructor(

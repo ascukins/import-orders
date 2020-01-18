@@ -10,56 +10,9 @@
   </mat-toolbar>
 </div>
 
-<table mat-table [dataSource]="store.mainOrders" class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>#</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "id") }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="customer">
-    <th mat-header-cell *matHeaderCellDef>Customer</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "customer") }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="created">
-    <th mat-header-cell *matHeaderCellDef>Created</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "created") }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="revenue">
-    <th mat-header-cell *matHeaderCellDef>Revenue $</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "revenue") }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="cost">
-    <th mat-header-cell *matHeaderCellDef>Cost $</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "cost") }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef>Price $</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "price") }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="fulfillmentStage">
-    <th mat-header-cell *matHeaderCellDef>Fulfillment</th>
-    <td mat-cell *matCellDef="let order">
-      {{ getOrderCellValue(order, "fulfillmentStage") }}
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedOrderColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedOrderColumns"></tr>
-</table>
+<div class="mat-elevation-z8" style="padding: 16px 16px 0;">
+  <app-orders-table
+    [displayedOrderColumns]="displayedOrderColumns"
+    [orders]="store.mainOrders"
+  ></app-orders-table>
+</div>

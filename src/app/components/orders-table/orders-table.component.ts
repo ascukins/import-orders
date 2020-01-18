@@ -13,7 +13,8 @@ import { MatPaginator } from '@angular/material/paginator';
 export class OrdersTableComponent implements OnInit {
   dataSource: MatTableDataSource<Order>;
   //  displayedOrderColumns: string[] = ['id', 'customer', 'created', 'revenue', 'cost', 'price', 'fulfillmentStage'];
-  displayedOrderColumns: string[] = ['id', 'customer', 'amountOfProducts', 'orderVolume', 'SKU'];
+  // displayedOrderColumns: string[] = ['id', 'customer', 'amountOfProducts', 'orderVolume', 'SKU'];
+  @Input() displayedOrderColumns: string[];
   @Input() orders: Order[];
   @Output() rowClick = new EventEmitter<Order>();
 
