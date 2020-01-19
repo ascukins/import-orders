@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Order } from 'src/app/models/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -10,7 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
   templateUrl: './orders-table.component.html',
   styleUrls: ['./orders-table.component.scss']
 })
-export class OrdersTableComponent implements OnInit {
+export class OrdersTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<Order>;
   @Input() displayedOrderColumns: string[];
   @Input() orders: Order[];
@@ -48,6 +48,12 @@ export class OrdersTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.orders);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnChanges() {
+    if (this.dataSource) {
+      this.dataSource.data = this.orders;
+    }
   }
 
   applyFilter(filterValue: string) {
