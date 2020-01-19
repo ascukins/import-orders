@@ -36,6 +36,8 @@ export class OrdersTableComponent implements OnInit {
         } else {
           return order[cell];
         }
+      case 'orderVolume':
+        return order[cell] + ' $';
       default:
         return order[cell];
     }

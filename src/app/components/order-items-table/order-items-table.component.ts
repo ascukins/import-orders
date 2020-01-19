@@ -4,6 +4,7 @@ import { OrderItem } from 'src/app/models/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-order-items-table',
@@ -12,7 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class OrderItemsTableComponent implements OnInit {
   dataSource: MatTableDataSource<OrderItem>;
-  displayedOrderColumns: string[] = ['name', 'sku', 'selected'];
+  displayedOrderColumns: string[] = ['name', 'option', 'sku', 'selected'];
 
   @Input() orderItems: OrderItem[];
   @Output() rowClick = new EventEmitter<OrderItem>();
@@ -26,9 +27,15 @@ export class OrderItemsTableComponent implements OnInit {
     switch (cell) {
       case 'selected':
         return orderItem[cell] ? 'selected' : 'not selected';
+      case 'option':
+        return orderItem[cell] ? orderItem[cell].text : 'not selected';
       default:
         return orderItem[cell];
     }
+  }
+
+  onCheckboxChange($event: MatCheckboxChange, orderItem: OrderItem) {
+    orderItem.selected = $event.checked;
   }
 
   ngOnInit() {

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Order, OrderItem } from '../models/models';
+import { Order, OrderItem, Address } from '../models/models';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,21 @@ export class OrderStoreService {
         sku: 'SOCK_101_BIG_1',
         amount: 4,
         price: 8.99,
-        options: []
+        options: [],
+        availableOptions: [
+          {
+            text: 'Heavy Wool Socks',
+            icon: 'pregnant_woman'
+          },
+          {
+            text: 'Crew Socks',
+            icon: 'sports_handball'
+          },
+          {
+            text: 'Light Socks',
+            icon: 'android'
+          }
+        ]
       },
 
       {
@@ -28,11 +43,33 @@ export class OrderStoreService {
         sku: 'SOCK_201_BIG_1',
         amount: 3,
         price: 9.15,
-        options: []
+        options: [],
+        availableOptions: [
+          {
+            text: 'Heavy Wool Socks',
+            icon: 'pregnant_woman'
+          },
+          {
+            text: 'Crew Socks',
+            icon: 'sports_handball'
+          },
+          {
+            text: 'Light Socks',
+            icon: 'android'
+          }
+        ],
+        selected: true
       },
     ];
 
 
+    const address: Address = {
+      street: 'lorem ipsum street address',
+      city: 'Riga',
+      zip: 'LV-1017',
+      state: 'CA',
+      country: 'USA'
+    }
 
 
     this.mainOrders = [
@@ -68,7 +105,8 @@ export class OrderStoreService {
         amountOfProducts: 2,
         orderVolume: 54.43,
         SKU: 'SOCK_101_BIG_1',
-        orderItems: items
+        orderItems: items,
+        address
       },
       {
         id: '#1235',
@@ -81,7 +119,8 @@ export class OrderStoreService {
         amountOfProducts: 3,
         orderVolume: 64.43,
         SKU: 'SOCK_101_BIG_2',
-        orderItems: items
+        orderItems: items,
+        address
       },
       {
         id: '#1135',
@@ -94,7 +133,8 @@ export class OrderStoreService {
         amountOfProducts: 40,
         orderVolume: 19.99,
         SKU: 'SPOON_123_BIG_1',
-        orderItems: items
+        orderItems: items,
+        address
       },
       {
         id: '#1136',
@@ -107,7 +147,8 @@ export class OrderStoreService {
         amountOfProducts: 8,
         orderVolume: 1504.11,
         SKU: 'ITEM_99_HZ_5',
-        orderItems: items
+        orderItems: items,
+        address
       },
       {
         id: '#1352',
@@ -120,7 +161,8 @@ export class OrderStoreService {
         amountOfProducts: 23,
         orderVolume: 614.43,
         SKU: 'SOCK_101_BIG_2',
-        orderItems: items
+        orderItems: items,
+        address
       },
       {
         id: '#135',
@@ -133,7 +175,8 @@ export class OrderStoreService {
         amountOfProducts: 4,
         orderVolume: 196.99,
         SKU: 'SPOON_123_BIG_1',
-        orderItems: items
+        orderItems: items,
+        address
       },
     ];
 
