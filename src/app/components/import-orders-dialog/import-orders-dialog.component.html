@@ -40,46 +40,7 @@
   <mat-step>
     <ng-template matStepLabel>Confirm Order</ng-template>
     <div class="step-content">
-      <div
-        style="overflow-y: auto; max-height: 420px;"
-        *ngIf="order?.orderItems"
-      >
-        <div style="min-height: 150px;">
-          <h3>Items</h3>
-          <div *ngFor="let item of order.orderItems" style="padding: 5px;">
-            <mat-checkbox
-              style="margin-right: 5px;"
-              disabled
-              [checked]="item.selected"
-            >
-            </mat-checkbox>
-            {{ item.sku }},
-            {{ item.name }}
-            <ng-container *ngIf="item.option">
-              ,
-              <mat-icon>{{ item.option.icon }}</mat-icon>
-              {{ item.option.text }}
-            </ng-container>
-          </div>
-        </div>
-
-        <div class="two-column">
-          <div>
-            <h3>Shipping</h3>
-            {{ order.customer }}<br />
-            {{ order.address.street }}<br />
-            {{ order.address.city }}<br />
-            {{ order.address.zip }}<br />
-            {{ order.address.state }}<br />
-            {{ order.address.country }}<br />
-          </div>
-          <div>
-            <h3>Production Subtotal</h3>
-            ...
-          </div>
-        </div>
-        <!-- <pre>{{ order | json }}</pre> -->
-      </div>
+      <app-order-details [order]="order"></app-order-details>
     </div>
     <div class="button-bar">
       <button mat-raised-button matStepperPrevious>Previous</button>

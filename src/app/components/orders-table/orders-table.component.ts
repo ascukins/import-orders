@@ -23,21 +23,45 @@ export class OrdersTableComponent implements OnInit, OnChanges {
   constructor() {
   }
 
+  addPlus(n: number) {
+    if (n > 0) {
+      return '+' + n;
+    } else {
+      return n;
+    }
+  }
+  currencyToString(amount: any) {
+    const s = String(amount);
+    return s.substring(0, s.length - 2) + '.' + s.substring(s.length - 2);
+  }
+
   getOrderCellValue(order: Order, cell: string) {
+    let sum: number;
+    let SKUs: string[];
     const dateOptions = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     switch (cell) {
+      case 'customer':
+        return order.customer.name;
       case 'created':
         return order[cell].toLocaleDateString('en-US', dateOptions);
+      case 'amountOfProducts':
+        sum = 0;
+        order.orderItems.forEach(i => sum += i.amount);
+        return sum;
       case 'revenue':
       case 'cost':
       case 'price':
-        if (order[cell] > 0) {
-          return '+' + order[cell];
+        sum = 0;
+        order.orderItems.forEach(i => sum += i[cell] * i.amount);
+        return this.currencyToString(this.addPlus(sum));
+      case 'SKU':
+        SKUs = [];
+        order.orderItems.forEach(i => SKUs.push(i.SKU));
+        if (SKUs.length > 3) {
+          return SKUs.slice(0, 2).join(', ') + `, (+${SKUs.length - 2})`;
         } else {
-          return order[cell];
+          return SKUs.join(', ');
         }
-      case 'orderVolume':
-        return order[cell] + ' $';
       default:
         return order[cell];
     }

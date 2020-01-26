@@ -1,6 +1,88 @@
 import { Injectable } from '@angular/core';
-import { Order, OrderItem, Address } from '../models/models';
+import { Order, OrderItem, Address, Customer, ProductOption } from '../models/models';
 
+
+export function pickRandomly(arr: any[]) {
+  if (Array.isArray(arr) && arr.length) {
+    const choice = Math.floor(Math.random() * arr.length - 0.0000001);
+    return arr[choice];
+  } else {
+    return null;
+  }
+}
+export function randomArray(approxLength: number, getItem: () => any) {
+  const length = Math.round(approxLength / 2 + Math.random() * approxLength);
+  const array = [];
+  for (let i = 0; i < length; i++) {
+    array.push(getItem());
+  }
+  return array;
+}
+
+export function randomAddress(): Address {
+  const address: Address = {
+    street: pickRandomly(['Brivibas iela', 'Agatan', 'Beehive street', 'Mazkupenas iela', 'Calle Nevada']),
+    city: pickRandomly(['Riga', 'New-York', 'Reno', 'Paris', 'Ventspils', 'Moscow']),
+    zip: String(Math.floor(Math.random() * 1000000)),
+    state: pickRandomly(['Grkalnas pagasts', 'LA', 'NY', 'CA', 'TX']),
+    country: pickRandomly(['USA', 'France', 'Italy', 'Latvia'])
+  };
+  return address;
+}
+
+export function randomCustomer(): Customer {
+  const names = ['John', 'Doe', 'Patrick', 'Linda', 'Bill', 'Peter', 'Ivan', 'Jackson', 'Barbara', 'Ieva', 'Norton', 'Donald'];
+  const customer: Customer = {
+    name: pickRandomly(names) + ' ' + pickRandomly(names),
+    address: randomAddress()
+  };
+  return customer;
+}
+
+export function randomProductOption(): ProductOption {
+  const productOption: ProductOption = {
+    icon: pickRandomly(['pregnant_woman', 'sports_handball', 'android', 'build', 'eco', 'rowing', 'pets', 'wc', 'house', 'bathtub',
+      'casino', 'spa', 'sports_golf']),
+    text: pickRandomly(['Heavy Wool', 'Cotton', 'Cotton', 'Light', 'Bold', 'Wide', 'Narrow', 'Slim', 'Oversize', 'Small', 'Large',
+      'Red', 'Green', 'Blue', 'Yellow', 'Violet', 'Black', 'White', 'Junior', 'Senior', 'Gift-boxed', 'Outlet'])
+  };
+  return productOption;
+}
+
+export function randomOrderItem(): OrderItem {
+  const cost = -Math.floor(Math.random() * 4000);
+  const price = -Math.floor(cost - cost * 0.5 * Math.random());
+  const orderItem: OrderItem = {
+    productId: String(Math.floor(Math.random() * 1000000)),
+    name: pickRandomly(['Christmas Dog Socks', 'Christmas Cat Socks', 'Hat', 'Shirt', 'T-shirt', 'Gloves', 'Jacket', 'Jeans']),
+    SKU: pickRandomly(['SOCK_101_BIG_1', 'SPOON_123_BIG_1', 'ITEM_99_HZ_5',
+      'OTHER_' + (Math.floor(Math.random() * 1000)), 'ITEM_' + (Math.floor(Math.random() * 1000)),
+      'WEAR_' + (Math.floor(Math.random() * 1000))]),
+    amount: Math.floor(1 + Math.random() * 12),
+    revenue: -(price + cost),
+    cost,
+    price,
+    options: [],
+    selected: true,
+    availableOptions: randomArray(4, randomProductOption)
+  };
+  return orderItem;
+}
+
+export function randomDate(start: Date, end: Date) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+export function randomOrder(): Order {
+  const order: Order = {
+    id: '#' + String(Math.floor(Math.random() * 1000000)),
+    created: randomDate(new Date('2019-01-01'), new Date('2020-01-01')),
+    customer: randomCustomer(),
+    fulfillmentStage: pickRandomly(['In production', 'Quality Control']),
+    orderItems: randomArray(3, randomOrderItem)
+  };
+  return order;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,174 +95,9 @@ export class OrderStoreService {
   constructor() {
     // TODO remove
     // console.log('store init');
-    const items: OrderItem[] = [
-      {
-        productId: '1',
-        name: 'Christmas Dog Socks',
-        sku: 'SOCK_101_BIG_1',
-        amount: 4,
-        price: 8.99,
-        options: [],
-        availableOptions: [
-          {
-            text: 'Heavy Wool Socks',
-            icon: 'pregnant_woman'
-          },
-          {
-            text: 'Crew Socks',
-            icon: 'sports_handball'
-          },
-          {
-            text: 'Light Socks',
-            icon: 'android'
-          }
-        ]
-      },
-
-      {
-        productId: '2',
-        name: 'Christmas Cat Socks',
-        sku: 'SOCK_201_BIG_1',
-        amount: 3,
-        price: 9.15,
-        options: [],
-        availableOptions: [
-          {
-            text: 'Heavy Wool Socks',
-            icon: 'pregnant_woman'
-          },
-          {
-            text: 'Crew Socks',
-            icon: 'sports_handball'
-          },
-          {
-            text: 'Light Socks',
-            icon: 'android'
-          }
-        ],
-        selected: true
-      },
-    ];
-
-
-    const address: Address = {
-      street: 'lorem ipsum street address',
-      city: 'Riga',
-      zip: 'LV-1017',
-      state: 'CA',
-      country: 'USA'
-    }
-
-
-    this.mainOrders = [
-      {
-        id: '#1234',
-        customer: 'John Doe',
-        created: new Date('03-15 14:14'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'In production'
-      },
-      {
-        id: '#1235',
-        customer: 'John Doe',
-        created: new Date('03-16 15:14'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Quality Control'
-      },
-    ];
-
-    this.externalOrders = [
-      {
-        id: '#1234',
-        customer: 'John Doe',
-        created: new Date('04-15 14:14'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Incoming',
-        amountOfProducts: 2,
-        orderVolume: 54.43,
-        SKU: 'SOCK_101_BIG_1',
-        orderItems: items,
-        address
-      },
-      {
-        id: '#1235',
-        customer: 'John Doe',
-        created: new Date('05-17 14:14'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Incoming',
-        amountOfProducts: 3,
-        orderVolume: 64.43,
-        SKU: 'SOCK_101_BIG_2',
-        orderItems: items,
-        address
-      },
-      {
-        id: '#1135',
-        customer: 'Donald Trump',
-        created: new Date('06-22 11:00'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Incoming',
-        amountOfProducts: 40,
-        orderVolume: 19.99,
-        SKU: 'SPOON_123_BIG_1',
-        orderItems: items,
-        address
-      },
-      {
-        id: '#1136',
-        customer: 'Hillary Clinton',
-        created: new Date('06-23 18:40'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Incoming',
-        amountOfProducts: 8,
-        orderVolume: 1504.11,
-        SKU: 'ITEM_99_HZ_5',
-        orderItems: items,
-        address
-      },
-      {
-        id: '#1352',
-        customer: 'Peter Norton',
-        created: new Date('05-17 14:14'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Incoming',
-        amountOfProducts: 23,
-        orderVolume: 614.43,
-        SKU: 'SOCK_101_BIG_2',
-        orderItems: items,
-        address
-      },
-      {
-        id: '#135',
-        customer: 'Bill Gates',
-        created: new Date('06-22 11:00'),
-        revenue: 5.15,
-        cost: -15.15,
-        price: 10,
-        fulfillmentStage: 'Incoming',
-        amountOfProducts: 4,
-        orderVolume: 196.99,
-        SKU: 'SPOON_123_BIG_1',
-        orderItems: items,
-        address
-      },
-    ];
-
-
+    this.mainOrders = randomArray(4, randomOrder);
+    this.externalOrders = randomArray(20, randomOrder);
+    this.externalOrders.forEach(o => o.fulfillmentStage = 'Incoming');
   }
 
   deleteFromExternalOrders(order: Order) {

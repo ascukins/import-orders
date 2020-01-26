@@ -11,7 +11,7 @@ import { Order } from 'src/app/models/models';
 })
 export class ImportOrdersDialogComponent {
   @ViewChild(MatStepper, { static: true }) stepper: MatStepper;
-  displayedOrderColumns: string[] = ['id', 'customer', 'amountOfProducts', 'orderVolume', 'SKU'];
+  displayedOrderColumns: string[] = ['id', 'customer', 'amountOfProducts', 'price', 'SKU'];
   order: Order;
 
   constructor(

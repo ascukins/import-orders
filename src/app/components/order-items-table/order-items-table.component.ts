@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter, OnChanges } from '@angular/core';
 import { OrderItem } from 'src/app/models/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -11,9 +11,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   templateUrl: './order-items-table.component.html',
   styleUrls: ['./order-items-table.component.scss']
 })
-export class OrderItemsTableComponent implements OnInit {
+export class OrderItemsTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<OrderItem>;
-  displayedOrderColumns: string[] = ['name', 'option', 'sku', 'selected'];
+  displayedOrderColumns: string[] = ['name', 'option', 'SKU', 'amount', 'selected'];
 
   @Input() orderItems: OrderItem[];
   @Output() rowClick = new EventEmitter<OrderItem>();
@@ -31,6 +31,12 @@ export class OrderItemsTableComponent implements OnInit {
         return orderItem[cell] ? orderItem[cell].text : 'not selected';
       default:
         return orderItem[cell];
+    }
+  }
+
+  ngOnChanges() {
+    if (this.dataSource) {
+      this.dataSource.data = this.orderItems;
     }
   }
 

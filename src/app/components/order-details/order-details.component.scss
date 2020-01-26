@@ -1,0 +1,12 @@
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+table {
+  text-align: right;
+  td,
+  th {
+    padding: 3px;
+  }
+}
