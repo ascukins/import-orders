@@ -1,54 +1,65 @@
-<div style="overflow-y: auto; max-height: 420px;" *ngIf="order?.orderItems">
-  <div style="min-height: 150px;">
-    <h3>Items</h3>
-    <div *ngFor="let item of order.orderItems" style="padding: 5px;">
-      <mat-checkbox
-        style="margin-right: 5px;"
-        disabled
-        [checked]="item.selected"
+<div *mobxAutorun>
+  <div
+    style="overflow-y: auto; max-height: 420px;"
+    *ngIf="store.selectedOrder?.orderItems"
+  >
+    <div style="min-height: 150px;">
+      <h3>Items</h3>
+      <div
+        *ngFor="let item of store.selectedOrder.orderItems"
+        style="padding: 5px;"
       >
-      </mat-checkbox>
-      {{ item.amount }} x {{ item.SKU }},
-      {{ item.name }}
-      <ng-container *ngIf="item.option">
-        ,
-        <mat-icon>{{ item.option.icon }}</mat-icon>
-        {{ item.option.text }}
-      </ng-container>
-    </div>
-  </div>
-
-  <div class="two-column">
-    <div>
-      <h3>Shipping</h3>
-      {{ order.customer.name }}<br />
-      {{ order.customer.address.street }}<br />
-      {{ order.customer.address.city }}<br />
-      {{ order.customer.address.zip }}<br />
-      {{ order.customer.address.state }}<br />
-      {{ order.customer.address.country }}<br />
-    </div>
-    <div>
-      <h3>Production Subtotal</h3>
-      <table>
-        <tr>
-          <th>SKU</th>
-          <th>Amount</th>
-          <th>Cost $</th>
-          <th>Price $</th>
-        </tr>
-        <ng-container *ngFor="let item of selectedItems">
-          <tr *ngIf="item.selected">
-            <td>{{ item.SKU }}</td>
-            <td>{{ item.amount }}</td>
-            <td>{{ item.cost / 100 }}</td>
-            <td>{{ item.price / 100 }}</td>
-          </tr>
+        <mat-checkbox
+          style="margin-right: 5px;"
+          disabled
+          [checked]="item.selected"
+        >
+        </mat-checkbox>
+        {{ item.amount }} x {{ item.SKU }},
+        {{ item.name }}
+        <ng-container *ngIf="item.option">
+          ,
+          <mat-icon>{{ item.option.icon }}</mat-icon>
+          {{ item.option.text }}
         </ng-container>
-      </table>
-
-      ...
+      </div>
     </div>
+
+    <div class="two-column">
+      <div>
+        <h3>Shipping</h3>
+        {{ store.selectedOrder.customer.name }}<br />
+        {{ store.selectedOrder.customer.address.street }}<br />
+        {{ store.selectedOrder.customer.address.city }}<br />
+        {{ store.selectedOrder.customer.address.zip }}<br />
+        {{ store.selectedOrder.customer.address.state }}<br />
+        {{ store.selectedOrder.customer.address.country }}<br />
+      </div>
+      <div>
+        <div *ngIf="store.selectedOrderSelectedItems.length">
+          <h3>Production Subtotal</h3>
+          <table>
+            <tr>
+              <th>SKU</th>
+              <th>Amount</th>
+              <th>Cost $</th>
+              <th>Price $</th>
+            </tr>
+            <ng-container *ngFor="let item of store.selectedOrderSelectedItems">
+              <tr>
+                <td>{{ item.SKU }}</td>
+                <td>{{ item.amount }}</td>
+                <td>{{ item.cost / 100 }}</td>
+                <td>{{ item.price / 100 }}</td>
+              </tr>
+            </ng-container>
+          </table>
+
+          <p>Order cost $: {{ store.selectedOrderCost / 100 }}</p>
+          <p>Order price $: {{ store.selectedOrderPrice / 100 }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- <pre>{{ order | json }}</pre> -->
   </div>
-  <!-- <pre>{{ order | json }}</pre> -->
 </div>

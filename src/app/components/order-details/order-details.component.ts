@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Order, OrderItem } from 'src/app/models/models';
+import { OrderStoreService } from 'src/app/store/order-store.service';
 
 @Component({
   selector: 'app-order-details',
@@ -7,22 +8,8 @@ import { Order, OrderItem } from 'src/app/models/models';
   styleUrls: ['./order-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrderDetailsComponent implements OnChanges {
+export class OrderDetailsComponent {
 
-  @Input() order: Order;
-
-  selectedItems: OrderItem[];
-
-  ngOnChanges() {
-    // if (this.dataSource) {
-    //   this.dataSource.data = this.orderItems;
-    // }
-    // console.log(2342345);
-    if (this.order) {
-      this.selectedItems = this.order.orderItems.filter(i => i.selected);
-    }
-  }
-
-  constructor() { }
+  constructor(public store: OrderStoreService) { }
 
 }

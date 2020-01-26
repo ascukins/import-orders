@@ -1,12 +1,19 @@
 .two-column {
+  padding: 0 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
 
-table {
-  text-align: right;
-  td,
-  th {
-    padding: 3px;
+  table {
+    width: 100%;
+    text-align: right;
+    td,
+    th {
+      padding: 3px;
+    }
+  }
+
+  p {
+    font-weight: bold;
+    text-align: right;
   }
 }

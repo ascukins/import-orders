@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MobxAngularModule } from 'mobx-angular';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -38,6 +39,7 @@ import { OrderDetailsComponent } from './components/order-details/order-details.
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    MobxAngularModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,

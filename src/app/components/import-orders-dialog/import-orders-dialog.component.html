@@ -3,7 +3,7 @@
 </mat-toolbar>
 
 <mat-horizontal-stepper [@.disabled]="true" [linear]="true">
-  <mat-step [completed]="order">
+  <mat-step [completed]="store.selectedOrder">
     <ng-template matStepLabel>Find Order</ng-template>
     <div class="step-content">
       <app-orders-table
@@ -21,13 +21,13 @@
   <mat-step>
     <ng-template matStepLabel>Prepare Products</ng-template>
     <div class="step-content">
-      <div *ngIf="order" class="breadcrumb">
+      <div *ngIf="store.selectedOrder" class="breadcrumb">
         <span class="link" (click)="stepper.reset()">My Orders</span> | Order
-        {{ order?.id }}
+        {{ store.selectedOrder?.id }}
       </div>
       <app-order-items-table
-        *ngIf="order?.orderItems"
-        [orderItems]="order.orderItems"
+        *ngIf="store.selectedOrder?.orderItems"
+        [orderItems]="store.selectedOrder.orderItems"
       ></app-order-items-table>
     </div>
     <div class="button-bar">
@@ -40,11 +40,11 @@
   <mat-step>
     <ng-template matStepLabel>Confirm Order</ng-template>
     <div class="step-content">
-      <app-order-details [order]="order"></app-order-details>
+      <app-order-details></app-order-details>
     </div>
     <div class="button-bar">
       <button mat-raised-button matStepperPrevious>Previous</button>
-      <button mat-raised-button [mat-dialog-close]="order">
+      <button mat-raised-button [mat-dialog-close]="store.selectedOrder">
         Confirm and Ship
       </button>
     </div>

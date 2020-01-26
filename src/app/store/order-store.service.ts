@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Order, OrderItem, Address, Customer, ProductOption } from '../models/models';
+import { observable, action, computed } from 'mobx-angular';
 
 
 export function pickRandomly(arr: any[]) {
@@ -84,13 +85,16 @@ export function randomOrder(): Order {
   return order;
 }
 
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class OrderStoreService {
 
-  mainOrders: Order[];
-  externalOrders: Order[];
+  @observable mainOrders: Order[];
+  @observable externalOrders: Order[];
+  @observable selectedOrder: Order;
 
   constructor() {
     // TODO remove
@@ -100,14 +104,45 @@ export class OrderStoreService {
     this.externalOrders.forEach(o => o.fulfillmentStage = 'Incoming');
   }
 
+  @computed
+  get selectedOrderSelectedItems() {
+    if (this.selectedOrder) {
+      return this.selectedOrder.orderItems.filter(i => i.selected);
+    } else {
+      return [];
+    }
+  }
+
+  @computed
+  get selectedOrderCost() {
+    let sum = 0;
+    this.selectedOrderSelectedItems.forEach(i => sum += i.cost * i.amount);
+    return sum;
+  }
+
+  @computed
+  get selectedOrderPrice() {
+    let sum = 0;
+    this.selectedOrderSelectedItems.forEach(i => sum += i.price * i.amount);
+    return sum;
+  }
+
+  @action
+  setSelectedOrder(order: Order) {
+    this.selectedOrder = order;
+  }
+
+  @action
   deleteFromExternalOrders(order: Order) {
     this.externalOrders = this.externalOrders.filter(o => o.id !== order.id);
   }
 
+  @action
   addToMainOrders(order: Order) {
     this.mainOrders = [...this.mainOrders, order];
   }
 
+  @action
   addImportedToMainOrders(order: Order) {
     order.fulfillmentStage = 'Imported';
     this.addToMainOrders(order);

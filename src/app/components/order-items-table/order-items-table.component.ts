@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { OrderItem } from 'src/app/models/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -9,7 +9,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
   selector: 'app-order-items-table',
   templateUrl: './order-items-table.component.html',
-  styleUrls: ['./order-items-table.component.scss']
+  styleUrls: ['./order-items-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrderItemsTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<OrderItem>;
