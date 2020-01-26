@@ -23,6 +23,7 @@ import { ImportOrdersDialogComponent } from './components/import-orders-dialog/i
 import { OrdersTableComponent } from './components/orders-table/orders-table.component';
 import { OrderItemsTableComponent } from './components/order-items-table/order-items-table.component';
 import { OrderDetailsComponent } from './components/order-details/order-details.component';
+import { OrderDetailsDialogComponent } from './components/order-details-dialog/order-details-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +32,12 @@ import { OrderDetailsComponent } from './components/order-details/order-details.
     ImportOrdersDialogComponent,
     OrdersTableComponent,
     OrderItemsTableComponent,
-    OrderDetailsComponent
+    OrderDetailsComponent,
+    OrderDetailsDialogComponent
   ],
   entryComponents: [
-    ImportOrdersDialogComponent
+    ImportOrdersDialogComponent,
+    OrderDetailsDialogComponent
   ],
   imports: [
     BrowserModule,

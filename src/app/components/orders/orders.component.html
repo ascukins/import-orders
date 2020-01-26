@@ -15,5 +15,6 @@
     [displayedOrderColumns]="displayedOrderColumns"
     [orders]="store.mainOrders"
     [pageSizeOptions]="[10, 30, 100]"
+    (rowClick)="onRowClick($event)"
   ></app-orders-table>
 </div>

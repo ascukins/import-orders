@@ -1,0 +1,12 @@
+<mat-toolbar>
+  <span> Order Details</span>
+</mat-toolbar>
+
+<div *mobxAutorun>
+  <div class="container" (click)="onCancelClick()">
+    <app-order-details></app-order-details>
+  </div>
+  <div class="button-bar">
+    <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+  </div>
+</div>
