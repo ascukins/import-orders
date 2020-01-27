@@ -43,7 +43,7 @@ export class OrdersTableComponent implements OnInit, OnChanges {
       case 'customer':
         return order.customer.name;
       case 'created':
-        return order[cell].toLocaleDateString('en-US', dateOptions);
+        return new Date(order[cell]).toLocaleDateString('en-US', dateOptions);
       case 'amountOfProducts':
         sum = 0;
         order.orderItems.forEach(i => sum += i.amount);

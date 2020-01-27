@@ -2,10 +2,10 @@
   <span> Import Order </span>
 </mat-toolbar>
 
-<mat-horizontal-stepper [@.disabled]="true" [linear]="true">
+<mat-horizontal-stepper [@.disabled]="true" [linear]="true" *mobxAutorun>
   <mat-step [completed]="store.selectedOrder">
     <ng-template matStepLabel>Find Order</ng-template>
-    <div class="step-content">
+    <div class="step-content" *ngIf="store.importableOrders.length">
       <app-orders-table
         [displayedOrderColumns]="displayedOrderColumns"
         [orders]="store.importableOrders"

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrderStoreService } from 'src/app/store/order-store.service';
 import { Order } from 'src/app/models/models';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +10,7 @@ import { OrderDetailsDialogComponent } from '../order-details-dialog/order-detai
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
-export class OrdersComponent {
+export class OrdersComponent implements OnInit {
   displayedOrderColumns: string[] = ['id', 'customer', 'created', 'revenue', 'cost', 'price', 'fulfillmentStage'];
   importedOrder: Order;
 
@@ -18,12 +18,13 @@ export class OrdersComponent {
     public dialog: MatDialog,
     public store: OrderStoreService) { }
 
-  openImportDialog() {
-    const dialogRef = this.dialog.open(ImportOrdersDialogComponent, {
-      width: '250px',
-      data: { importedOrder: this.importedOrder }
-    });
+  ngOnInit() {
+    this.store.initMainOrders();
+  }
 
+  openImportDialog() {
+    this.store.initImportableOrders();
+    const dialogRef = this.dialog.open(ImportOrdersDialogComponent);
     dialogRef.afterClosed().subscribe((order: Order) => {
       this.importedOrder = order;
       if (order) {

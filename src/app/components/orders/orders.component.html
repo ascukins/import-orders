@@ -10,7 +10,11 @@
   </mat-toolbar>
 </div>
 
-<div class="mat-elevation-z8" style="padding: 16px 16px 0;">
+<div
+  class="mat-elevation-z8"
+  style="padding: 16px 16px 0;"
+  *ngIf="store.mainOrders.length"
+>
   <app-orders-table
     [displayedOrderColumns]="displayedOrderColumns"
     [orders]="store.mainOrders"

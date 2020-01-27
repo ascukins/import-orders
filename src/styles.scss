@@ -32,3 +32,16 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.loading-non-modal {
+  position: fixed;
+  z-index: 99999;
+  height: 100px;
+  width: 100px;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

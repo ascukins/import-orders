@@ -16,8 +16,8 @@ export class ImportOrdersDialogComponent {
 
   constructor(
     public store: OrderStoreService,
-    public dialogRef: MatDialogRef<ImportOrdersDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    public dialogRef: MatDialogRef<ImportOrdersDialogComponent>
+  ) { }
 
   onOrderRowClick(order: Order) {
     this.store.setSelectedOrder(order);
