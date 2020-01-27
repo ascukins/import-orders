@@ -93,15 +93,15 @@ export function randomOrder(): Order {
 export class OrderStoreService {
 
   @observable mainOrders: Order[];
-  @observable externalOrders: Order[];
+  @observable importableOrders: Order[];
   @observable selectedOrder: Order;
 
   constructor() {
     // TODO remove
     // console.log('store init');
     this.mainOrders = randomArray(4, randomOrder);
-    this.externalOrders = randomArray(20, randomOrder);
-    this.externalOrders.forEach(o => o.fulfillmentStage = 'Incoming');
+    this.importableOrders = randomArray(20, randomOrder);
+    this.importableOrders.forEach(o => o.fulfillmentStage = 'Incoming');
   }
 
   @computed
@@ -133,8 +133,8 @@ export class OrderStoreService {
   }
 
   @action
-  deleteFromExternalOrders(order: Order) {
-    this.externalOrders = this.externalOrders.filter(o => o.id !== order.id);
+  deleteFromImportableOrders(order: Order) {
+    this.importableOrders = this.importableOrders.filter(o => o.id !== order.id);
   }
 
   @action

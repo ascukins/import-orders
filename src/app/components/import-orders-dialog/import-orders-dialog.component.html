@@ -8,7 +8,7 @@
     <div class="step-content">
       <app-orders-table
         [displayedOrderColumns]="displayedOrderColumns"
-        [orders]="store.externalOrders"
+        [orders]="store.importableOrders"
         (rowClick)="onOrderRowClick($event)"
       >
       </app-orders-table>

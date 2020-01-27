@@ -28,7 +28,7 @@ export class OrdersComponent {
       this.importedOrder = order;
       if (order) {
         this.store.addImportedToMainOrders(order);
-        this.store.deleteFromExternalOrders(order);
+        this.store.deleteFromImportableOrders(order);
       }
     });
   }
