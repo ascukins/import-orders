@@ -30,6 +30,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InMemoryDataService } from './services/in-memory-data.service';
 import { SpinnerService } from './services/spinner.service';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { OrderApiService } from './services/order-api.service';
 
 @NgModule({
   declarations: [
@@ -68,10 +69,11 @@ import { LoaderInterceptor } from './interceptors/loader.interceptor';
     )
   ],
   providers: [
-    OrderStoreService,
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true, maxWidth: 850, minWidth: '850px' } },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true, maxWidth: '850px', minWidth: '850px' } },
     SpinnerService,
-    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+    OrderApiService,
+    OrderStoreService
   ],
   bootstrap: [AppComponent]
 })

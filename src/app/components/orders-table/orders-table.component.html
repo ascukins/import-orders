@@ -4,7 +4,7 @@
     <input
       matInput
       (keyup)="applyFilter($event.target.value)"
-      placeholder="Filter"
+      placeholder="Filter by customer name and order id"
     />
   </mat-form-field>
 
@@ -16,10 +16,10 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="customer">
-      <th mat-header-cell *matHeaderCellDef>Customer</th>
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
       <td mat-cell *matCellDef="let order">
-        {{ getOrderCellValue(order, "customer") }}
+        {{ getOrderCellValue(order, "customerName") }}
       </td>
     </ng-container>
 

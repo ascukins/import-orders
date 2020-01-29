@@ -17,10 +17,10 @@
         </mat-checkbox>
         {{ item.amount }} x {{ item.SKU }},
         {{ item.name }}
-        <ng-container *ngIf="item.option">
+        <ng-container *ngFor="let option of item.options">
           ,
-          <mat-icon>{{ item.option.icon }}</mat-icon>
-          {{ item.option.text }}
+          <mat-icon>{{ option.icon }}</mat-icon>
+          {{ option.text }}
         </ng-container>
       </div>
     </div>

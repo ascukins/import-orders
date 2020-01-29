@@ -45,3 +45,13 @@ body {
   bottom: 0;
   right: 0;
 }
+
+.product-variant-select {
+  .mat-form-field-wrapper {
+    .mat-form-field-flex {
+      .mat-form-field-infix {
+        width: 250px;
+      }
+    }
+  }
+}

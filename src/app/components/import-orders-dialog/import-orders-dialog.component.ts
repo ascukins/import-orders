@@ -11,8 +11,8 @@ import { Order } from 'src/app/models/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportOrdersDialogComponent {
-  @ViewChild(MatStepper, { static: true }) stepper: MatStepper;
-  displayedOrderColumns: string[] = ['id', 'customer', 'amountOfProducts', 'price', 'SKU'];
+  @ViewChild(MatStepper, { static: false }) stepper: MatStepper;
+  displayedOrderColumns: string[] = ['id', 'customerName', 'amountOfProducts', 'price', 'SKU'];
 
   constructor(
     public store: OrderStoreService,

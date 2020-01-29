@@ -1,12 +1,14 @@
 
-export type FulfillmentStage = 'In production' | 'Quality Control' | 'Incoming' | 'Imported';
+export type FulfillmentStage = 'In production' | 'Quality Control' | 'Incoming' | 'Imported' | 'Cancelled';
 export type currency = number;
 export interface Order {
   id: string;
   created: Date;
   customer: Customer;
+  customerName: string;
   fulfillmentStage: FulfillmentStage;
   orderItems: OrderItem[];
+  // some fields may be added for caching purposes
   // revenue: currency;
   // cost: currency;
   // price: currency;
@@ -36,7 +38,6 @@ export interface OrderItem {
   cost: currency;
   price: currency;
   options?: ProductOption[];
-  option?: ProductOption;
   availableOptions: ProductOption[];
   selected: boolean;
 }
@@ -46,6 +47,8 @@ export interface ProductOption {
   text: string;
 }
 
+// Data structure can be improved by separating product entity like this:
+//
 // export interface Product {
 //   id: string;
 //   name: string;

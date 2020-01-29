@@ -11,11 +11,22 @@ export function pickRandomly(arr: any[]) {
     return null;
   }
 }
+
 export function randomArray(approxLength: number, getItem: () => any) {
   const length = Math.round(approxLength / 2 + Math.random() * approxLength);
   const array = [];
   for (let i = 0; i < length; i++) {
-    array.push(getItem());
+    const item = getItem();
+    if (item.id) {
+      const foundIndex = array.findIndex(e => e.id === item.id);
+      if (foundIndex >= 0) {
+        array[foundIndex] = item;
+      } else {
+        array.push(item);
+      }
+    } else {
+      array.push(item);
+    }
   }
   return array;
 }
@@ -75,16 +86,17 @@ export function randomDate(start: Date, end: Date) {
 }
 
 export function randomOrder(): Order {
+  const customer = randomCustomer();
   const order: Order = {
-    id: '#' + String(Math.floor(Math.random() * 1000000)),
+    id: String(Math.floor(Math.random() * 999999)).padStart(6, '0'),
     created: randomDate(new Date('2019-01-01'), new Date('2020-01-01')),
-    customer: randomCustomer(),
+    customer,
+    customerName: customer.name,
     fulfillmentStage: pickRandomly(['In production', 'Quality Control']),
-    orderItems: randomArray(3, randomOrderItem)
+    orderItems: randomArray(2, randomOrderItem)
   };
   return order;
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -92,9 +104,38 @@ export function randomOrder(): Order {
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     const mainOrders = randomArray(4, randomOrder);
-    const importableOrders = randomArray(20, randomOrder);
+    const importableOrders = randomArray(5000, randomOrder);
     importableOrders.forEach(o => o.fulfillmentStage = 'Incoming');
     return { mainOrders, importableOrders };
+  }
+
+  /**
+   * Apply query/search parameters as a filter over the collection
+   * This impl only supports RegExp queries on string properties of the collection
+   * ANDs the conditions together
+   */
+  protected applyQuery(collection: any[], query: Map<string, string[]>): any[] {
+    // extract filtering conditions - {propertyName, RegExps) - from query/search parameters
+    const conditions: { name: string, rx: RegExp }[] = [];
+    const caseSensitive = 'i'; // this.config.caseSensitiveSearch ? undefined : 'i';
+    query.forEach((value: string[], name: string) => {
+      value.forEach(v => conditions.push({ name, rx: new RegExp(decodeURI(v), caseSensitive) }));
+    });
+
+    const len = conditions.length;
+    if (!len) { return collection; }
+
+    // AND the RegExp conditions
+    return collection.filter(row => {
+      let ok = true;
+      let i = len;
+      while (ok && i) {
+        i -= 1;
+        const cond = conditions[i];
+        ok = cond.rx.test(row[cond.name]);
+      }
+      return ok;
+    });
   }
 
 }

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Order } from '../models/models';
 import { observable, action, computed } from 'mobx-angular';
-import { HttpClient } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { tap, flatMap } from 'rxjs/operators';
+import { OrderApiService } from '../services/order-api.service';
 
 
 @Injectable({
@@ -15,28 +14,9 @@ export class OrderStoreService {
   @observable importableOrders: Order[] = [];
   @observable selectedOrder: Order;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private orderApi: OrderApiService) { }
 
-  // The app might benefit from unidirectional data flow from API to store in case if data amount is not too large
-
-  @action
-  initMainOrders() {
-    this.http.get<Order[]>('api/mainOrders')
-      .pipe(
-        catchError((error: any) => throwError(error.error || 'Server error')),
-        tap(orders => this.mainOrders = orders)
-      ).subscribe();
-  }
-
-  @action
-  initImportableOrders() {
-    this.http.get<Order[]>('api/importableOrders')
-      .pipe(
-        catchError((error: any) => throwError(error.error || 'Server error')),
-        tap(orders => this.importableOrders = orders)
-      ).subscribe();
-  }
+  // Computed
 
   @computed
   get selectedOrderSelectedItems() {
@@ -61,26 +41,55 @@ export class OrderStoreService {
     return sum;
   }
 
+  // Actions
+
   @action
   setSelectedOrder(order: Order) {
     this.selectedOrder = order;
   }
 
+  // The app might benefit from unidirectional data flow from API to store in case if data amount is not too large
+
+  @action
+  initMainOrders() {
+    this.orderApi.getMainOrders().pipe(
+      tap(orders => this.mainOrders = orders)
+    ).subscribe();
+  }
+
+  @action
+  initImportableOrders() {
+    this.orderApi.getImportableOrders().pipe(
+      tap(orders => this.importableOrders = orders)
+    ).subscribe();
+  }
+
+
   @action
   deleteFromImportableOrders(order: Order) {
-    this.importableOrders = this.importableOrders.filter(o => o.id !== order.id);
+    return this.orderApi.deleteImportableOrder(order).pipe(
+      tap(() => this.importableOrders = this.importableOrders.filter(o => o.id !== order.id))
+    );
   }
 
   @action
   addToMainOrders(order: Order) {
-    this.mainOrders = [...this.mainOrders, order];
+    return this.orderApi.postToMainOrders(order)
+      .pipe(
+        tap(() => this.mainOrders = [...this.mainOrders, order])
+      );
   }
 
-  @action
-  addImportedToMainOrders(order: Order) {
-    order.fulfillmentStage = 'Imported';
-    this.addToMainOrders(order);
+  @action importSelectedOrder() {
+    if (this.selectedOrderSelectedItems.length) {
+      this.selectedOrder.fulfillmentStage = 'Imported';
+    } else {
+      this.selectedOrder.fulfillmentStage = 'Cancelled';
+    }
+    return this.addToMainOrders(this.selectedOrder).pipe(
+      flatMap(() => this.deleteFromImportableOrders(this.selectedOrder)),
+      tap(() => this.initMainOrders())
+    );
   }
-
 
 }

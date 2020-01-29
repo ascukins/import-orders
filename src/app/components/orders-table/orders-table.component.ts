@@ -40,8 +40,6 @@ export class OrdersTableComponent implements OnInit, OnChanges {
     let SKUs: string[];
     const dateOptions = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     switch (cell) {
-      case 'customer':
-        return order.customer.name;
       case 'created':
         return new Date(order[cell]).toLocaleDateString('en-US', dateOptions);
       case 'amountOfProducts':
@@ -52,7 +50,8 @@ export class OrdersTableComponent implements OnInit, OnChanges {
       case 'cost':
       case 'price':
         sum = 0;
-        order.orderItems.forEach(i => sum += i[cell] * i.amount);
+        const items = order.orderItems.filter(i => i.selected);
+        items.forEach(i => sum += i[cell] * i.amount);
         return this.currencyToString(this.addPlus(sum));
       case 'SKU':
         SKUs = [];

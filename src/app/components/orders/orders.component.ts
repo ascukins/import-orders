@@ -11,8 +11,7 @@ import { OrderDetailsDialogComponent } from '../order-details-dialog/order-detai
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
-  displayedOrderColumns: string[] = ['id', 'customer', 'created', 'revenue', 'cost', 'price', 'fulfillmentStage'];
-  importedOrder: Order;
+  displayedOrderColumns: string[] = ['id', 'customerName', 'created', 'revenue', 'cost', 'price', 'fulfillmentStage'];
 
   constructor(
     public dialog: MatDialog,
@@ -26,10 +25,11 @@ export class OrdersComponent implements OnInit {
     this.store.initImportableOrders();
     const dialogRef = this.dialog.open(ImportOrdersDialogComponent);
     dialogRef.afterClosed().subscribe((order: Order) => {
-      this.importedOrder = order;
+      this.store.setSelectedOrder(order);
       if (order) {
-        this.store.addImportedToMainOrders(order);
-        this.store.deleteFromImportableOrders(order);
+        this.store.importSelectedOrder().subscribe(() => {
+          this.store.setSelectedOrder(undefined);
+        });
       }
     });
   }
