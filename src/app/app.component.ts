@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SpinnerService } from './services/spinner.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  subscription: Subscription;
   public isBusy = true;
   title = 'import-orders';
 
@@ -15,7 +17,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.spinner.isLoading.subscribe((busy: number) => {
+    this.subscription = this.spinner.isLoading.subscribe((busy: number) => {
       if (busy === 0) {
         setTimeout(() => this.isBusy = false);
       } else if (busy === 1) {
@@ -29,4 +31,9 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
 }
