@@ -2,13 +2,15 @@
 
 Angular app for order processing.
 
-Front-end prototype.
+Front-end prototype, not intended for any practical use.
 
-Based on Angular Material components.
+Based on Angular Material components, including MatDialog, MatStepper, MatTable, MatSort, MatPaginator.
 
-Back-end mock is currently using Angular in-memory-web-api.
+Also features global loading spinner attached as Http Interceptor.
 
-API for pagination, filtering, and sorting is not implemented yet.
+MobX state management store is set up, but basically utilized for getter caching rather than state storage.
+
+Back-end mock is based on Angular in-memory-web-api hacked to support pagination, filtering, and ordering in through query parameters.
 
 ### Live demo
 

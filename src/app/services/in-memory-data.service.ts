@@ -62,7 +62,7 @@ export function randomProductOption(): ProductOption {
 }
 
 export function randomOrderItem(): OrderItem {
-  const cost = -Math.floor(Math.random() * 4000);
+  const cost = -Math.floor(Math.random() * 2000) - 1;
   const price = -Math.floor(cost - cost * 0.5 * Math.random());
   const orderItem: OrderItem = {
     productId: String(Math.floor(Math.random() * 1000000)),

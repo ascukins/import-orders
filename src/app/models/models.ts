@@ -1,6 +1,12 @@
 
 export type FulfillmentStage = 'In production' | 'Quality Control' | 'Incoming' | 'Imported' | 'Cancelled';
 export type currency = number;
+
+export interface OrderArrayApiResponse {
+  totalCount: number;
+  items: Order[];
+}
+
 export interface Order {
   id: string;
   created: Date;

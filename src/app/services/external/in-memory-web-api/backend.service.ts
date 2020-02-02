@@ -160,7 +160,7 @@ export abstract class BackendService {
    * This impl only supports RegExp queries on string properties of the collection
    * ANDs the conditions together
    */
-  protected applyQuery(collection: any[], query: Map<string, string[]>): any[] {
+  protected applyQuery(collection: any[], query: Map<string, string[]>): any {
     // extract filtering conditions - {propertyName, RegExps) - from query/search parameters
     const conditions: { name: string, rx: RegExp }[] = [];
     const caseSensitive = this.config.caseSensitiveSearch ? undefined : 'i';
@@ -169,12 +169,14 @@ export abstract class BackendService {
     let orderBy = '';
     let startAt = 0;
     let limit = 0;
+    let totalCount: number;
 
     // TODO
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!! I would say, this needs refactoring before commiting this functionality to actual Angular repository !!!
-    // !!! Firstmost, the method is too long                                                                    !!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!! Would require refactoring before commiting this functionality to actual Angular repository.     !!!
+    // !!! Implementation of totalCount breaks backward compatability                                      !!!
+    // !!! The method is too long                                                                          !!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     query.forEach((value: string[], name: string) => {
       value.forEach(v => {
@@ -288,13 +290,18 @@ export abstract class BackendService {
       }
     }
 
+    totalCount = resultCollection.length;
+
     if (limit) {
       resultCollection = resultCollection.slice(startAt, startAt + limit);
     } else {
       resultCollection = resultCollection.slice(startAt);
     }
 
-    return resultCollection;
+    return {
+      totalCount,
+      items: resultCollection
+    };
   }
 
   /**

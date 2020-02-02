@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { Order } from '../models/models';
+import { Order, OrderArrayApiResponse } from '../models/models';
 
 const cudOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
@@ -38,7 +38,7 @@ export class OrderApiService {
 
   getMainOrders(filter: string, orderBy: string, startAt: number, limit: number) {
     const url = this.apiUrlMainOrders + this.buildQueryParameterString(filter, orderBy, startAt, limit);
-    return this.http.get<Order[]>(url)
+    return this.http.get<OrderArrayApiResponse>(url)
       .pipe(
         catchError(this.handleError)
       );
@@ -46,7 +46,7 @@ export class OrderApiService {
 
   getImportableOrders(filter: string, orderBy: string, startAt: number, limit: number) {
     const url = this.apiUrlImportableOrders + this.buildQueryParameterString(filter, orderBy, startAt, limit);
-    return this.http.get<Order[]>(url)
+    return this.http.get<OrderArrayApiResponse>(url)
       .pipe(
         catchError(this.handleError)
       );

@@ -28,7 +28,7 @@ export class OrdersComponent implements OnInit {
       if (order) {
         this.store.importSelectedOrder().subscribe(() => {
           this.store.setSelectedOrder(undefined);
-          this.ordersTable.forceUpdate.next(order);
+          this.ordersTable.filtersUpdate.next(order);
         });
       }
     });

@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { BehaviorSubject, Subscription, merge, of, Subject } from 'rxjs';
 import { catchError, startWith, switchMap, map } from 'rxjs/operators';
 import { OrderStoreService } from 'src/app/store/order-store.service';
+import { observable } from 'mobx';
 
 
 @Component({
@@ -20,22 +21,25 @@ export class OrdersTableComponent implements OnInit, OnChanges, AfterViewInit, O
   @Output() rowClick = new EventEmitter<Order>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  ordersLength = 999;
+  @observable ordersLength = 0;
+  ordersFilter = '';
   subscription = new Subscription();
   dataSource: MatTableDataSource<Order>;
-  filterChange = new BehaviorSubject('');
-  forceUpdate = new Subject<Order>();
+  filtersUpdate = new Subject<any>();
 
   constructor(public store: OrderStoreService) {
   }
 
   addPlus(n: number) {
     if (n > 0) {
-      return '+' + n;
+      return '+' + String(n).padStart(3, '0');
+    } else if (n < 0) {
+      return '-' + String(-n).padStart(3, '0');
     } else {
-      return n;
+      return '000';
     }
   }
+
   currencyToString(amount: any) {
     const s = String(amount);
     return s.substring(0, s.length - 2) + '.' + s.substring(s.length - 2);
@@ -82,9 +86,9 @@ export class OrdersTableComponent implements OnInit, OnChanges, AfterViewInit, O
 
   ngAfterViewInit() {
     this.subscription.add(this.sort.sortChange.subscribe(() => this.paginator.firstPage()));
-    this.subscription.add(this.filterChange.subscribe(() => this.paginator.firstPage()));
+    this.subscription.add(this.filtersUpdate.subscribe(() => this.paginator.firstPage()));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterChange, this.forceUpdate)
+    merge(this.sort.sortChange, this.paginator.page, this.filtersUpdate)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -94,22 +98,21 @@ export class OrdersTableComponent implements OnInit, OnChanges, AfterViewInit, O
           }
           if (this.ordersType === 'Main') {
             return this.store.getMainOrders(
-              this.filterChange.value,
+              this.ordersFilter,
               sortString,
               this.paginator.pageIndex * this.paginator.pageSize,
               this.paginator.pageSize);
           } else {
             return this.store.getImportableOrders(
-              this.filterChange.value,
+              this.ordersFilter,
               sortString,
               this.paginator.pageIndex * this.paginator.pageSize,
               this.paginator.pageSize);
           }
         }),
         map(data => {
-          // this.resultsLength = data.total_count;
-          // return data.items;
-          return data;
+          this.ordersLength = data.totalCount;
+          return data.items;
         }),
         catchError(() => {
           return of([]);
@@ -126,7 +129,8 @@ export class OrdersTableComponent implements OnInit, OnChanges, AfterViewInit, O
   }
 
   applyFilter(filterValue: string) {
-    this.filterChange.next(filterValue.trim().toLowerCase());
+    this.ordersFilter = filterValue.trim().toLowerCase();
+    this.filtersUpdate.next();
   }
 
   onRowClick(order: Order) {

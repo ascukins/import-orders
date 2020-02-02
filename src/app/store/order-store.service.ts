@@ -12,6 +12,8 @@ export class OrderStoreService {
 
   @observable mainOrders: Order[] = [];
   @observable importableOrders: Order[] = [];
+  @observable mainOrdersTotalCount: number;
+  @observable importableOrdersTotalCount: number;
   @observable selectedOrder: Order;
 
   constructor(private orderApi: OrderApiService) { }
@@ -53,21 +55,30 @@ export class OrderStoreService {
   @action
   getMainOrders(filter: string, orderBy: string, startAt: number, limit: number) {
     return this.orderApi.getMainOrders(filter, orderBy, startAt, limit).pipe(
-      tap(orders => this.mainOrders = orders)
+      tap(orders => {
+        this.mainOrders = orders.items;
+        this.mainOrdersTotalCount = orders.totalCount;
+      })
     );
   }
 
   @action
   getImportableOrders(filter: string, orderBy: string, startAt: number, limit: number) {
     return this.orderApi.getImportableOrders(filter, orderBy, startAt, limit).pipe(
-      tap(orders => this.importableOrders = orders)
+      tap(orders => {
+        this.importableOrders = orders.items;
+        this.importableOrdersTotalCount = orders.totalCount;
+      })
     );
   }
 
   @action
   deleteFromImportableOrders(order: Order) {
     return this.orderApi.deleteImportableOrder(order).pipe(
-      tap(() => this.importableOrders = this.importableOrders.filter(o => o.id !== order.id))
+      tap(() => {
+        this.importableOrders = this.importableOrders.filter(o => o.id !== order.id);
+        this.importableOrdersTotalCount--;
+      })
     );
   }
 
@@ -75,7 +86,10 @@ export class OrderStoreService {
   addToMainOrders(order: Order) {
     return this.orderApi.postToMainOrders(order)
       .pipe(
-        tap(() => this.mainOrders = [...this.mainOrders, order])
+        tap(() => {
+          this.mainOrders = [order, ...this.mainOrders];
+          this.mainOrdersTotalCount++;
+        })
       );
   }
 

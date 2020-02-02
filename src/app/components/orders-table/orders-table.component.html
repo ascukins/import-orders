@@ -4,9 +4,20 @@
     <input
       matInput
       (keyup)="applyFilter($event.target.value)"
-      placeholder="Filter by customer name and order id"
+      placeholder="Filter by Customer name, Id, Date, Fulfillment stage"
     />
   </mat-form-field>
+
+  <div style="position: relative">
+    <div
+      *ngIf="ordersFilter && !ordersLength"
+      class="warning-over-table mat-elevation-z2"
+    >
+      <h2>
+        No matching records found
+      </h2>
+    </div>
+  </div>
 
   <table class="w100" mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="id">
