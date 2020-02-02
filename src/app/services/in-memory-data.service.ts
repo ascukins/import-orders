@@ -108,34 +108,4 @@ export class InMemoryDataService implements InMemoryDbService {
     importableOrders.forEach(o => o.fulfillmentStage = 'Incoming');
     return { mainOrders, importableOrders };
   }
-
-  /**
-   * Apply query/search parameters as a filter over the collection
-   * This impl only supports RegExp queries on string properties of the collection
-   * ANDs the conditions together
-   */
-  protected applyQuery(collection: any[], query: Map<string, string[]>): any[] {
-    // extract filtering conditions - {propertyName, RegExps) - from query/search parameters
-    const conditions: { name: string, rx: RegExp }[] = [];
-    const caseSensitive = 'i'; // this.config.caseSensitiveSearch ? undefined : 'i';
-    query.forEach((value: string[], name: string) => {
-      value.forEach(v => conditions.push({ name, rx: new RegExp(decodeURI(v), caseSensitive) }));
-    });
-
-    const len = conditions.length;
-    if (!len) { return collection; }
-
-    // AND the RegExp conditions
-    return collection.filter(row => {
-      let ok = true;
-      let i = len;
-      while (ok && i) {
-        i -= 1;
-        const cond = conditions[i];
-        ok = cond.rx.test(row[cond.name]);
-      }
-      return ok;
-    });
-  }
-
 }

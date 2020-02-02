@@ -3,7 +3,7 @@ import { Order } from 'src/app/models/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { BehaviorSubject, Subscription, merge, of, Subject } from 'rxjs';
+import { Subscription, merge, of, Subject } from 'rxjs';
 import { catchError, startWith, switchMap, map } from 'rxjs/operators';
 import { OrderStoreService } from 'src/app/store/order-store.service';
 import { observable } from 'mobx';
