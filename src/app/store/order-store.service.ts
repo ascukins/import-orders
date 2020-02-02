@@ -51,19 +51,18 @@ export class OrderStoreService {
   // The app might benefit from unidirectional data flow from API to store in case if data amount is not too large
 
   @action
-  initMainOrders() {
-    this.orderApi.getMainOrders().pipe(
+  getMainOrders(filter: string, orderBy: string, startAt: number, limit: number) {
+    return this.orderApi.getMainOrders(filter, orderBy, startAt, limit).pipe(
       tap(orders => this.mainOrders = orders)
-    ).subscribe();
+    );
   }
 
   @action
-  initImportableOrders() {
-    this.orderApi.getImportableOrders().pipe(
+  getImportableOrders(filter: string, orderBy: string, startAt: number, limit: number) {
+    return this.orderApi.getImportableOrders(filter, orderBy, startAt, limit).pipe(
       tap(orders => this.importableOrders = orders)
-    ).subscribe();
+    );
   }
-
 
   @action
   deleteFromImportableOrders(order: Order) {
@@ -87,8 +86,7 @@ export class OrderStoreService {
       this.selectedOrder.fulfillmentStage = 'Cancelled';
     }
     return this.addToMainOrders(this.selectedOrder).pipe(
-      flatMap(() => this.deleteFromImportableOrders(this.selectedOrder)),
-      tap(() => this.initMainOrders())
+      flatMap(() => this.deleteFromImportableOrders(this.selectedOrder))
     );
   }
 

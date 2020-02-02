@@ -1,8 +1,11 @@
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter, OnChanges, AfterViewInit, OnDestroy } from '@angular/core';
 import { Order } from 'src/app/models/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { BehaviorSubject, Subscription, merge, of, Subject } from 'rxjs';
+import { catchError, startWith, switchMap, map } from 'rxjs/operators';
+import { OrderStoreService } from 'src/app/store/order-store.service';
 
 
 @Component({
@@ -10,17 +13,20 @@ import { MatPaginator } from '@angular/material/paginator';
   templateUrl: './orders-table.component.html',
   styleUrls: ['./orders-table.component.scss']
 })
-export class OrdersTableComponent implements OnInit, OnChanges {
-  dataSource: MatTableDataSource<Order>;
+export class OrdersTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() displayedOrderColumns: string[];
-  @Input() orders: Order[];
+  @Input() ordersType: 'Main' | 'Importable';
   @Input() pageSizeOptions = [5];
   @Output() rowClick = new EventEmitter<Order>();
-
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  ordersLength = 999;
+  subscription = new Subscription();
+  dataSource: MatTableDataSource<Order>;
+  filterChange = new BehaviorSubject('');
+  forceUpdate = new Subject<Order>();
 
-  constructor() {
+  constructor(public store: OrderStoreService) {
   }
 
   addPlus(n: number) {
@@ -68,23 +74,59 @@ export class OrdersTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.orders);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSource = new MatTableDataSource([]);
   }
 
   ngOnChanges() {
-    if (this.dataSource) {
-      this.dataSource.data = this.orders;
-    }
+  }
+
+  ngAfterViewInit() {
+    this.subscription.add(this.sort.sortChange.subscribe(() => this.paginator.firstPage()));
+    this.subscription.add(this.filterChange.subscribe(() => this.paginator.firstPage()));
+
+    merge(this.sort.sortChange, this.paginator.page, this.filterChange, this.forceUpdate)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          let sortString;
+          if (this.sort.active && this.sort.direction) {
+            sortString = (this.sort.direction === 'desc' ? '-' : '') + this.sort.active;
+          }
+          if (this.ordersType === 'Main') {
+            return this.store.getMainOrders(
+              this.filterChange.value,
+              sortString,
+              this.paginator.pageIndex * this.paginator.pageSize,
+              this.paginator.pageSize);
+          } else {
+            return this.store.getImportableOrders(
+              this.filterChange.value,
+              sortString,
+              this.paginator.pageIndex * this.paginator.pageSize,
+              this.paginator.pageSize);
+          }
+        }),
+        map(data => {
+          // this.resultsLength = data.total_count;
+          // return data.items;
+          return data;
+        }),
+        catchError(() => {
+          return of([]);
+        })
+      ).subscribe(
+        orders => {
+          this.dataSource.data = orders;
+        }
+      );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.filterChange.next(filterValue.trim().toLowerCase());
   }
 
   onRowClick(order: Order) {

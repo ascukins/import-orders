@@ -15,15 +15,38 @@ export class OrderApiService {
 
   constructor(private http: HttpClient) { }
 
-  getMainOrders() {
-    return this.http.get<Order[]>(this.apiUrlMainOrders)
+  buildQueryParameterString(filter: string, orderBy: string, startAt: number, limit: number) {
+    const parameters: string[] = [];
+    if (filter) {
+      parameters.push('$q=' + filter);
+    }
+    if (orderBy) {
+      parameters.push('$orderBy=' + orderBy);
+    }
+    if (startAt) {
+      parameters.push('$startAt=' + startAt);
+    }
+    if (limit) {
+      parameters.push('$limit=' + limit);
+    }
+    if (parameters.length) {
+      return '?' + parameters.join('&');
+    } else {
+      return '';
+    }
+  }
+
+  getMainOrders(filter: string, orderBy: string, startAt: number, limit: number) {
+    const url = this.apiUrlMainOrders + this.buildQueryParameterString(filter, orderBy, startAt, limit);
+    return this.http.get<Order[]>(url)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  getImportableOrders() {
-    return this.http.get<Order[]>(this.apiUrlImportableOrders)
+  getImportableOrders(filter: string, orderBy: string, startAt: number, limit: number) {
+    const url = this.apiUrlImportableOrders + this.buildQueryParameterString(filter, orderBy, startAt, limit);
+    return this.http.get<Order[]>(url)
       .pipe(
         catchError(this.handleError)
       );

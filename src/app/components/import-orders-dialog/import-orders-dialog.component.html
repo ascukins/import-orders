@@ -5,10 +5,10 @@
 <mat-horizontal-stepper [@.disabled]="true" [linear]="true" *mobxAutorun>
   <mat-step [completed]="store.selectedOrder">
     <ng-template matStepLabel>Find Order</ng-template>
-    <div class="step-content" *ngIf="store.importableOrders.length">
+    <div class="step-content">
       <app-orders-table
         [displayedOrderColumns]="displayedOrderColumns"
-        [orders]="store.importableOrders"
+        [ordersType]="'Importable'"
         (rowClick)="onOrderRowClick($event)"
       >
       </app-orders-table>

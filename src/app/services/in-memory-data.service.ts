@@ -82,14 +82,14 @@ export function randomOrderItem(): OrderItem {
 }
 
 export function randomDate(start: Date, end: Date) {
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())); // TODO .toISOString();
 }
 
 export function randomOrder(): Order {
   const customer = randomCustomer();
   const order: Order = {
     id: String(Math.floor(Math.random() * 999999)).padStart(6, '0'),
-    created: randomDate(new Date('2019-01-01'), new Date('2020-01-01')),
+    created: randomDate(new Date('2019-01-01'), new Date('2019-12-31')),
     customer,
     customerName: customer.name,
     fulfillmentStage: pickRandomly(['In production', 'Quality Control']),

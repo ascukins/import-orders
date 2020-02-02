@@ -164,28 +164,137 @@ export abstract class BackendService {
     // extract filtering conditions - {propertyName, RegExps) - from query/search parameters
     const conditions: { name: string, rx: RegExp }[] = [];
     const caseSensitive = this.config.caseSensitiveSearch ? undefined : 'i';
+    let resultCollection: any[] = [];
+    let filter = '';
+    let orderBy = '';
+    let startAt = 0;
+    let limit = 0;
+
+    // TODO
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!! I would say, this needs refactoring before commiting this functionality to actual Angular repository !!!
+    // !!! Firstmost, the method is too long                                                                    !!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     query.forEach((value: string[], name: string) => {
-      value.forEach(v => conditions.push({ name, rx: new RegExp(decodeURI(v), caseSensitive) }));
+      value.forEach(v => {
+        switch (name) {
+          case '$q':
+            filter = decodeURI(v);
+            break;
+          case '$orderBy':
+            orderBy = decodeURI(v);
+            break;
+          case '$startAt':
+            startAt = Number(v);
+            break;
+          case '$limit':
+            limit = Number(v);
+            break;
+          default:
+            conditions.push({ name, rx: new RegExp(decodeURI(v), caseSensitive) });
+            break;
+        }
+      });
     });
 
-    // console.log(query);
-    // console.log(conditions);
 
+    resultCollection = collection;
+    const conditionsLen = conditions.length;
+    if (conditionsLen) {
+      // AND the RegExp conditions
+      resultCollection = resultCollection.filter(row => {
+        let ok = true;
+        let i = conditionsLen;
+        while (ok && i) {
+          i -= 1;
+          const cond = conditions[i];
+          ok = cond.rx.test(row[cond.name]);
+        }
+        return ok;
+      });
+    }
 
-    const len = conditions.length;
-    if (!len) { return collection; }
+    if (filter) {
+      resultCollection = resultCollection.filter(row => {
+        for (const key in row) {
+          if (row.hasOwnProperty(key)) {
+            const cellType = typeof row[key];
+            if (cellType === 'number') {
+              if (filter === row[key].toString()) {
+                return true;
+              }
+            } else if (cellType === 'string') {
+              if (row[key].toLowerCase().includes(filter)) {
+                return true;
+              }
+            } else if (cellType === 'object') {
+              if (row[key] && row[key].toISOString) {
+                if (row[key].toISOString().includes(filter)) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        return false;
+      });
+    }
 
-    // AND the RegExp conditions
-    return collection.filter(row => {
-      let ok = true;
-      let i = len;
-      while (ok && i) {
-        i -= 1;
-        const cond = conditions[i];
-        ok = cond.rx.test(row[cond.name]);
+    if (orderBy) {
+      let direction: number;
+      let key: string;
+      if (orderBy.startsWith('-')) {
+        direction = -1;
+        key = orderBy.substring(1);
+      } else {
+        direction = 1;
+        key = orderBy;
       }
-      return ok;
-    });
+      if (resultCollection.length) {
+        const cellValue = resultCollection[0][key];
+        const cellType = typeof cellValue;
+        let compareFn: (a: any, b: any) => number | undefined;
+        if (cellType === 'number') {
+          compareFn = (a, b) => (a[key] - b[key]) * direction;
+        } else if (cellType === 'string') {
+          compareFn = (a, b) => {
+            if (a[key] < b[key]) {
+              return direction * -1;
+            } else if (a[key] > b[key]) {
+              return direction * 1;
+            } else {
+              return 0;
+            }
+          };
+        } else if (cellType === 'object' && cellValue.toISOString) {
+          compareFn = (a, b) => {
+            if (a[key].toISOString && b[key].toISOString) {
+              if (a[key].toISOString() < b[key].toISOString()) {
+                return direction * -1;
+              } else if (a[key].toISOString() > b[key].toISOString()) {
+                return direction * 1;
+              } else {
+                return 0;
+              }
+            } else {
+              return 0;
+            }
+          };
+        } else {
+          compareFn = undefined;
+        }
+        resultCollection = resultCollection.sort(compareFn);
+      }
+    }
+
+    if (limit) {
+      resultCollection = resultCollection.slice(startAt, startAt + limit);
+    } else {
+      resultCollection = resultCollection.slice(startAt);
+    }
+
+    return resultCollection;
   }
 
   /**
